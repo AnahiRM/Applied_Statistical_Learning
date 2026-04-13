@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Energy Prediction Reliability — France</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ink:    #1a1a1a;
+            --muted:  #555;
+            --faint:  #888;
+            --bg:     #f7f5f0;
+            --card:   #fff;
+            --warm:   #eeeae0;
+            --border: #d4d0c8;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: Georgia, serif;
+            background: var(--bg);
+            color: var(--ink);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0.6rem 2rem;
+        }
+
+        nav a {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--faint);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        nav a:hover { color: var(--ink); }
+
+        section {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 5rem 2rem 3rem;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 0.5px solid var(--border);
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-bottom: 0.6rem;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: normal;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+            max-width: 700px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: normal;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+            max-width: 640px;
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 620px;
+            margin-bottom: 1.5rem;
+            line-height: 1.75;
+        }
+
+        .body-text {
+            font-size: 0.92rem;
+            color: var(--muted);
+            max-width: 620px;
+            margin-bottom: 1.25rem;
+            line-height: 1.75;
+        }
+
+        .twist-label {
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: var(--ink);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 2px;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: var(--warm);
+            border-radius: 4px;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .stat-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            color: var(--ink);
+        }
+
+        .stat-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-top: 2px;
+        }
+
+        blockquote {
+            border-left: 3px solid var(--ink);
+            padding: 0.75rem 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--ink);
+            font-size: 1rem;
+            max-width: 620px;
+            background: var(--warm);
+        }
+
+        .viz-wrap {
+            margin: 2.5rem 0 1rem;
+            background: var(--card);
+            border: 0.5px solid var(--border);
+            border-radius: 4px;
+            padding: 1.5rem;
+        }
+
+        .viz-caption {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: var(--faint);
+            letter-spacing: 0.05em;
+            margin-top: 0.75rem;
+        }
+
+        #vizB { width: 100%; }
+        #vizB svg { display: block; width: 100%; }
+
+        #vizC-layout {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        #mapPanel { flex: 1; min-width: 0; }
+        #mapPanel svg { display: block; width: 100%; }
+
+        #legendWrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .legend-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: var(--faint);
+        }
+
+        #legendCanvas { flex: 1; height: 8px; border-radius: 4px; }
+
+        #corseNote {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #bbb;
+            margin-top: 6px;
+        }
+
+        #infoPanel {
+            width: 260px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 4rem;
+        }
+
+        #infoDefault {
+            background: var(--warm);
+            border-radius: 4px;
+            padding: 1.25rem;
+        }
+
+        #infoDefault p {
+            font-size: 0.82rem;
+            color: #777;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        #infoCard {
+            display: none;
+            border: 1.5px solid var(--ink);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #infoCard.visible { display: block; }
+
+        #cardHeader {
+            background: var(--ink);
+            color: #fff;
+            padding: 1rem 1.25rem;
+        }
+
+        #cardRegion { font-size: 0.92rem; margin-bottom: 4px; }
+
+        #cardMape {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .card-mape-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        #cardBody { padding: 1.25rem; background: var(--card); }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 6px 0;
+            border-bottom: 0.5px solid #eee;
+        }
+
+        .metric-row:last-child { border-bottom: none; }
+
+        .metric-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--faint);
+        }
+
+        .metric-value { font-size: 0.88rem; color: var(--ink); }
+        .bias-pos { color: #c0392b; }
+        .bias-neg { color: #27ae60; }
+
+        #rankWrap {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 0.5px solid #eee;
+        }
+
+        .rank-title {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--faint);
+            margin-bottom: 6px;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 3px;
+            font-size: 10px;
+            color: var(--faint);
+        }
+
+        .rank-item.current { color: var(--ink); font-weight: bold; }
+        .rank-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .rank-name { width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .rank-bar-bg { flex: 1; height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
+        .rank-bar-fill { height: 100%; border-radius: 2px; }
+        .rank-val { font-family: 'Courier New', monospace; font-size: 10px; width: 34px; text-align: right; color: #bbb; }
+
+        .region-path {
+            cursor: pointer;
+            stroke: var(--bg);
+            stroke-width: 1.5;
+            transition: opacity 0.15s ease;
+        }
+
+        .region-path.active { stroke: var(--ink); stroke-width: 2.5; }
+        .region-path.muted  { opacity: 0.3; }
+
+        #vizD {
+            width: 100%;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--faint);
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: 1px dashed var(--border);
+            border-radius: 4px;
+        }
+
+        footer {
+            max-width: 960px;
+            margin: 3rem auto 0;
+            padding: 1.5rem 2rem 3rem;
+            border-top: 0.5px solid var(--border);
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #bbb;
+            letter-spacing: 0.04em;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#s1">Context</a>
+    <a href="#s2">The model</a>
+    <a href="#s3">The twist</a>
+    <a href="#s4">The map</a>
+    <a href="#s5">Explanation</a>
+    <a href="#s6">Conclusion</a>
+</nav>
+
+
+<!-- S1 — CONTEXT -->
+<section id="s1">
+    <div class="eyebrow">Data Storytelling · CSC 51052 · 2026</div>
+    <h1>Predicting energy consumption in France — when the model is right on average but wrong where it matters</h1>
+    <p class="lead">
+        Grid operators must anticipate electricity demand in real time. Over-prediction wastes resources. Under-prediction risks blackouts. In a country as climatically and demographically diverse as France, a model that performs well <em>on average</em> may still fail systematically in specific places.
+    </p>
+    <p class="body-text">
+        We trained a Random Forest model on daily weather observations and regional demographic data to predict electricity consumption per capita across 12 metropolitan French regions from 2017 to 2021. This is the story of what we found.
+    </p>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- S2 — THE MODEL -->
+<section id="s2">
+    <div class="eyebrow">Section 2 — The model</div>
+    <h2>The Random Forest predicts energy consumption well</h2>
+    <p class="body-text">
+        After comparing five model families, the Random Forest achieved the best balance of accuracy and interpretability. Evaluated on a held-out test set of 6,348 observations across 12 regions, it achieves strong overall performance.
+    </p>
+
+    <div class="stat-row">
+        <div class="stat-item">
+            <div class="stat-value">1.706</div>
+            <div class="stat-label">MAE (kWh/capita)</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">2.315</div>
+            <div class="stat-label">RMSE (kWh/capita)</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">0.941</div>
+            <div class="stat-label">R²</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">4.3%</div>
+            <div class="stat-label">Mean MAPE</div>
+        </div>
+    </div>
+
+    <p class="body-text">
+        The scatter plot shows predicted vs actual consumption for every test observation, colored by region. Points along the dashed diagonal represent perfect predictions. Click a region in the legend to highlight it.
+    </p>
+
+    <div class="viz-wrap">
+        <div id="vizB"></div>
+        <p class="viz-caption">Fig. 1 — Predicted vs actual consumption per capita (kWh). Each point = one region-day observation. Dashed line = perfect prediction. Colored by region.</p>
+    </div>
+
+    <p class="body-text">The model looks good. Most analyses would stop here.</p>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- S3 — THE TWIST -->
+<section id="s3">
+    <span class="twist-label">The twist</span>
+    <h2>Average performance conceals critical spatial heterogeneity</h2>
+    <p class="body-text">
+        When we decompose prediction errors by region, a very different picture emerges. A one-way ANOVA confirms that regional differences in prediction error are statistically significant — F=10.03, p&lt;0.001. These are not random fluctuations. The gap between the best and worst predicted region is 52%.
+    </p>
+    <p class="body-text">
+        Applying a national-level model with uniform assumptions across regions obscures these critical variations — exactly the kind of aggregation bias that makes regional energy planning unreliable.
+    </p>
+    <div class="viz-wrap">
+    <div id="vizANOVA"></div>
+    <p class="viz-caption">Table 1 — Mean MAPE by region, sorted descending. One-way ANOVA confirms differences are statistically significant (F=10.03, p&lt;0.001).</p>
+</div>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- S4 — THE MAP -->
+<section id="s4">
+    <div class="eyebrow">Section 4 — Spatial analysis</div>
+    <h2>Where does the model struggle?</h2>
+    <p class="body-text">
+        The choropleth below encodes mean MAPE by region — darker red means harder to predict. Hover over any region to explore its prediction metrics, systematic bias direction, and ranking among all regions.
+    </p>
+
+    <div class="viz-wrap">
+        <div id="vizC-layout">
+            <div id="mapPanel">
+                <div id="legendWrap">
+                    <span class="legend-label" id="legendMin"></span>
+                    <canvas id="legendCanvas" height="8"></canvas>
+                    <span class="legend-label" id="legendMax"></span>
+                </div>
+                <p id="corseNote">† Corse excluded — insufficient weather station coverage.</p>
+            </div>
+            <div id="infoPanel">
+                <div id="infoDefault">
+                    <p>Hover over a region to explore its prediction metrics, error distribution, and ranking.</p>
+                </div>
+                <div id="infoCard">
+                    <div id="cardHeader">
+                        <div id="cardRegion"></div>
+                        <div id="cardMape"></div>
+                        <div class="card-mape-label">Mean Absolute Percentage Error</div>
+                    </div>
+                    <div id="cardBody">
+                        <div class="metric-row">
+                            <span class="metric-label">MAE</span>
+                            <span class="metric-value" id="cardMae"></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Avg predicted</span>
+                            <span class="metric-value" id="cardPred"></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Avg actual</span>
+                            <span class="metric-value" id="cardTrue"></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Systematic bias</span>
+                            <span class="metric-value" id="cardBias"></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Density</span>
+                            <span class="metric-value" id="cardDensity"></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Test observations</span>
+                            <span class="metric-value" id="cardN"></span>
+                        </div>
+                        <div id="rankWrap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="viz-caption">Fig. 2 — Mean MAPE by French region (test set). Sequential color scale: green = low error, dark red = high error. Hover for details.</p>
+    </div>
+
+    <div class="viz-wrap">
+        <div id="vizD"></div>
+        <p class="viz-caption">Fig. 3 — Distribution of prediction errors by region, sorted by median MAPE.</p>
+    </div>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- S5 — EXPLANATION -->
+<section id="s5">
+    <div class="eyebrow">Section 5 — Interpretation</div>
+    <h2>Why are some regions harder to predict?</h2>
+    <p class="body-text">
+        The naive hypothesis — that denser, more urban regions should be easier to predict — is wrong. Île-de-France is the most dense region in France (1,009 people/km²) and has the highest prediction error. Urban economics offers the explanation.
+    </p>
+    <p class="body-text">
+        Dense urban areas like Paris are dominated by collective housing — apartment buildings with shared walls, which are thermally far more efficient than detached single-family homes. A weather-based model sees cold temperatures and predicts high heating demand. But Parisians in well-insulated apartment blocks need substantially less heating than the model expects. The model is blind to building typology, and this blindness is systematic.
+    </p>
+    <p class="body-text">
+        Beyond building form, several structural factors introduce inherent unpredictability: the <em>split-incentive problem</em> between landlords and tenants, older building stock near city centres, and the COVID-19 shift to telework which permanently redistributed demand from predictable commercial districts to dispersed residential suburbs.
+    </p>
+    <p class="body-text">
+        Regions with stable Mediterranean climates — Provence-Alpes-Côte d'Azur and Nouvelle-Aquitaine — benefit from consistent consumption patterns that a weather-based model learns well.
+    </p>
+    <div class="viz-wrap">
+    <div id="vizE"></div>
+    <p class="viz-caption">Fig. 4 — Mean MAPE vs population density (log scale). Each point = one region. Color encodes MAPE magnitude. The naive hypothesis that denser regions are easier to predict is not supported — Île-de-France is the densest and the hardest to predict.</p>
+</div>
+
+    <blockquote>
+        "Prediction reliability is not simply a function of climate variability. It reflects the urban form, building stock, and behavioral patterns that determine how regions translate weather into energy demand."
+    </blockquote>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- S6 — CONCLUSION -->
+<section id="s6">
+    <div class="eyebrow">Section 6 — Conclusion</div>
+    <h2>Understanding where models fail is as important as their average performance</h2>
+    <p class="body-text">
+        Our Random Forest achieves strong average performance (R²=0.941), but its reliability varies significantly across French regions — and those variations are statistically significant and spatially structured. Better regional forecasting requires not just better weather data, but data on building typology, housing tenure, and urban morphology.
+    </p>
+    <p class="body-text">
+        This analysis shifts the focus from <em>predictive accuracy</em> to <em>predictive reliability across space</em> — a distinction that matters for grid operators, urban planners, and anyone making decisions based on regional energy forecasts.
+    </p>
+
+    <blockquote>
+        "While our model predicts energy consumption well on average, its performance varies significantly across regions — revealing that the relationship between weather and energy consumption is mediated by urban structure in ways that aggregate models cannot capture."
+    </blockquote>
+</section>
+
+
+<footer>
+    Data: Météo-France (weather) · RTE (electricity consumption) · INSEE (population &amp; density)<br>
+    Model: Random Forest with GridSearchCV — n_estimators=300, max_depth=50, R²=0.941, MAE=1.706 kWh/capita<br>
+    Geographic boundaries: gregoiredavid/france-geojson (IGN Admin Express, ODbL licence)<br>
+    Course: CSC 51052 — Data Visualization · École Polytechnique · 2026
+</footer>
+
+<script src="../js/d3.v7.min.js"></script>
+<script src="../js/vizB.js"></script>
+<script src="../js/vizC.js"></script>
+<script src="../js/vizANOVA.js"></script>
+<script src="../js/vizD.js"></script>
+<script src="../js/vizE.js"></script>
+<script>
+    createVizB();
+    createViz();
+    createVizANOVA();
+    createVizD();
+    createVizE();
+</script>
+
+</body>
+</html>

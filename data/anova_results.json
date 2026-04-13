@@ -1,0 +1,102 @@
+{
+  "f_stat": 10.029,
+  "p_value": 2.36e-18,
+  "regions": [
+    {
+      "name": "Île-de-France",
+      "n": 532,
+      "mean": 0.0514,
+      "std": 0.0445,
+      "min": 0.0001,
+      "max": 0.2437
+    },
+    {
+      "name": "Bourgogne-Franche-Comté",
+      "n": 523,
+      "mean": 0.0513,
+      "std": 0.0509,
+      "min": 0.0002,
+      "max": 0.4059
+    },
+    {
+      "name": "Centre-Val de Loire",
+      "n": 324,
+      "mean": 0.049,
+      "std": 0.0394,
+      "min": 0.0005,
+      "max": 0.2169
+    },
+    {
+      "name": "Bretagne",
+      "n": 569,
+      "mean": 0.0448,
+      "std": 0.0476,
+      "min": 0.0,
+      "max": 0.3812
+    },
+    {
+      "name": "Grand Est",
+      "n": 581,
+      "mean": 0.0417,
+      "std": 0.0421,
+      "min": 0.0001,
+      "max": 0.3177
+    },
+    {
+      "name": "Occitanie",
+      "n": 595,
+      "mean": 0.0417,
+      "std": 0.0391,
+      "min": 0.0001,
+      "max": 0.2434
+    },
+    {
+      "name": "Pays de la Loire",
+      "n": 327,
+      "mean": 0.0417,
+      "std": 0.0371,
+      "min": 0.0004,
+      "max": 0.235
+    },
+    {
+      "name": "Normandie",
+      "n": 599,
+      "mean": 0.0416,
+      "std": 0.0347,
+      "min": 0.0,
+      "max": 0.2195
+    },
+    {
+      "name": "Hauts-de-France",
+      "n": 538,
+      "mean": 0.0408,
+      "std": 0.0354,
+      "min": 0.0001,
+      "max": 0.274
+    },
+    {
+      "name": "Auvergne-Rhône-Alpes",
+      "n": 584,
+      "mean": 0.0401,
+      "std": 0.0351,
+      "min": 0.0001,
+      "max": 0.2062
+    },
+    {
+      "name": "Nouvelle-Aquitaine",
+      "n": 569,
+      "mean": 0.0367,
+      "std": 0.0343,
+      "min": 0.0001,
+      "max": 0.2171
+    },
+    {
+      "name": "Provence-Alpes-Côte d'Azur",
+      "n": 607,
+      "mean": 0.0337,
+      "std": 0.0306,
+      "min": 0.0001,
+      "max": 0.2042
+    }
+  ]
+}
