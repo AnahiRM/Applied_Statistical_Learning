@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Energy Prediction Reliability — French Regions</title>
+    <script src="d3_v7_min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Georgia, serif;
+            background: #f7f5f0;
+            color: #1a1a1a;
+        }
+
+        #main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        #header {
+            width: 960px;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 1rem;
+        }
+
+        #header .eyebrow {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 0.4rem;
+        }
+
+        #header h1 {
+            font-size: 1.7rem;
+            font-weight: normal;
+            line-height: 1.25;
+            margin-bottom: 0.4rem;
+        }
+
+        #header .subtitle {
+            font-size: 0.88rem;
+            color: #555;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        #layout {
+            display: flex;
+            gap: 2rem;
+            width: 960px;
+            align-items: flex-start;
+        }
+
+        #mapPanel {
+            flex: 1;
+        }
+
+        #mapPanel svg {
+            display: block;
+            width: 100%;
+        }
+
+        #legendWrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .legend-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #888;
+        }
+
+        #legendCanvas {
+            flex: 1;
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        #corseNote {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #aaa;
+            margin-top: 6px;
+        }
+
+        #infoPanel {
+            width: 300px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 2rem;
+        }
+
+        #infoDefault {
+            background: #eeeae0;
+            border-radius: 4px;
+            padding: 1.25rem;
+        }
+
+        #infoDefault p {
+            font-size: 0.83rem;
+            color: #777;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        #infoCard {
+            display: none;
+            border: 1.5px solid #1a1a1a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #infoCard.visible { display: block; }
+
+        #cardHeader {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem 1.25rem;
+        }
+
+        #cardRegion {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            letter-spacing: 0.02em;
+        }
+
+        #cardMape {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .card-mape-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        #cardBody {
+            padding: 1.25rem;
+            background: #fff;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 6px 0;
+            border-bottom: 0.5px solid #eee;
+        }
+
+        .metric-row:last-child { border-bottom: none; }
+
+        .metric-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #888;
+        }
+
+        .metric-value {
+            font-size: 0.88rem;
+            color: #1a1a1a;
+        }
+
+        .bias-pos { color: #c0392b; }
+        .bias-neg { color: #27ae60; }
+
+        #rankWrap {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 0.5px solid #eee;
+        }
+
+        .rank-title {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #888;
+            margin-bottom: 6px;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 3px;
+            font-size: 10px;
+            color: #888;
+        }
+
+        .rank-item.current {
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+
+        .rank-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .rank-name {
+            width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-bar-bg {
+            flex: 1;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .rank-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        .rank-val {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            width: 34px;
+            text-align: right;
+            color: #aaa;
+        }
+
+        .region-path {
+            cursor: pointer;
+            stroke: #f7f5f0;
+            stroke-width: 1.5;
+            transition: opacity 0.15s ease;
+        }
+
+        .region-path.active {
+            stroke: #1a1a1a;
+            stroke-width: 2.5;
+        }
+
+        .region-path.muted {
+            opacity: 0.3;
+        }
+
+        #footer {
+            width: 960px;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 0.5px solid #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #aaa;
+            letter-spacing: 0.04em;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <div id="header">
+        <div class="eyebrow">Random Forest · Test set evaluation · 2017–2021</div>
+        <h1>Where does the model struggle?<br>Prediction reliability across French regions</h1>
+        <p class="subtitle">
+            Mean Absolute Percentage Error (MAPE) of a weather-based energy consumption model.<br>
+            Hover over a region to explore prediction metrics.
+        </p>
+    </div>
+
+    <div id="layout">
+        <div id="mapPanel">
+            <!-- SVG injected by D3 -->
+            <div id="legendWrap">
+                <span class="legend-label" id="legendMin"></span>
+                <canvas id="legendCanvas" height="8"></canvas>
+                <span class="legend-label" id="legendMax"></span>
+            </div>
+            <p id="corseNote">† Corse excluded — insufficient weather station coverage.</p>
+        </div>
+
+        <div id="infoPanel">
+            <div id="infoDefault">
+                <p>Hover over a region to see detailed prediction metrics: error magnitude, bias direction, population density, and ranking.</p>
+            </div>
+            <div id="infoCard">
+                <div id="cardHeader">
+                    <div id="cardRegion"></div>
+                    <div id="cardMape"></div>
+                    <div class="card-mape-label">Mean Absolute % Error</div>
+                </div>
+                <div id="cardBody">
+                    <div class="metric-row">
+                        <span class="metric-label">MAE</span>
+                        <span class="metric-value" id="cardMae"></span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Avg predicted</span>
+                        <span class="metric-value" id="cardPred"></span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Avg actual</span>
+                        <span class="metric-value" id="cardTrue"></span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Systematic bias</span>
+                        <span class="metric-value" id="cardBias"></span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Density</span>
+                        <span class="metric-value" id="cardDensity"></span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Test observations</span>
+                        <span class="metric-value" id="cardN"></span>
+                    </div>
+                    <div id="rankWrap"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        Sources: Météo-France (weather) · RTE (electricity consumption) · INSEE (population density) ·
+        Model: Random Forest with GridSearchCV (n_estimators=300, max_depth=50)
+    </div>
+</div>
+<script src="viz.js"></script>
+<script>createViz();</script>
+</body>
+</html>

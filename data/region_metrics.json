@@ -1,0 +1,110 @@
+{
+  "Auvergne-Rhône-Alpes": {
+    "mean_mape": 0.04,
+    "mean_mae": 1.8,
+    "mean_predicted": 45.427,
+    "mean_true": 45.352,
+    "mean_bias": -0.076,
+    "density": 112.586,
+    "n_obs": 584
+  },
+  "Bourgogne-Franche-Comté": {
+    "mean_mape": 0.051,
+    "mean_mae": 2.002,
+    "mean_predicted": 41.075,
+    "mean_true": 40.954,
+    "mean_bias": -0.121,
+    "density": 58.586,
+    "n_obs": 523
+  },
+  "Bretagne": {
+    "mean_mape": 0.045,
+    "mean_mae": 1.609,
+    "mean_predicted": 36.954,
+    "mean_true": 36.506,
+    "mean_bias": -0.448,
+    "density": 121.641,
+    "n_obs": 569
+  },
+  "Centre-Val de Loire": {
+    "mean_mape": 0.049,
+    "mean_mae": 1.914,
+    "mean_predicted": 39.756,
+    "mean_true": 39.849,
+    "mean_bias": 0.093,
+    "density": 65.3,
+    "n_obs": 324
+  },
+  "Grand Est": {
+    "mean_mape": 0.042,
+    "mean_mae": 1.797,
+    "mean_predicted": 44.569,
+    "mean_true": 44.519,
+    "mean_bias": -0.05,
+    "density": 96.29,
+    "n_obs": 581
+  },
+  "Hauts-de-France": {
+    "mean_mape": 0.041,
+    "mean_mae": 1.803,
+    "mean_predicted": 45.756,
+    "mean_true": 45.874,
+    "mean_bias": 0.118,
+    "density": 187.587,
+    "n_obs": 538
+  },
+  "Normandie": {
+    "mean_mape": 0.042,
+    "mean_mae": 1.947,
+    "mean_predicted": 45.306,
+    "mean_true": 45.894,
+    "mean_bias": 0.589,
+    "density": 110.6,
+    "n_obs": 599
+  },
+  "Nouvelle-Aquitaine": {
+    "mean_mape": 0.037,
+    "mean_mae": 1.477,
+    "mean_predicted": 39.603,
+    "mean_true": 39.602,
+    "mean_bias": -0.001,
+    "density": 70.162,
+    "n_obs": 569
+  },
+  "Occitanie": {
+    "mean_mape": 0.042,
+    "mean_mae": 1.456,
+    "mean_predicted": 35.005,
+    "mean_true": 34.842,
+    "mean_bias": -0.163,
+    "density": 79.989,
+    "n_obs": 595
+  },
+  "Pays de la Loire": {
+    "mean_mape": 0.042,
+    "mean_mae": 1.664,
+    "mean_predicted": 40.232,
+    "mean_true": 40.387,
+    "mean_bias": 0.155,
+    "density": 115.418,
+    "n_obs": 327
+  },
+  "Provence-Alpes-Côte d'Azur": {
+    "mean_mape": 0.034,
+    "mean_mae": 1.519,
+    "mean_predicted": 44.335,
+    "mean_true": 44.404,
+    "mean_bias": 0.069,
+    "density": 159.412,
+    "n_obs": 607
+  },
+  "Île-de-France": {
+    "mean_mape": 0.051,
+    "mean_mae": 1.584,
+    "mean_predicted": 31.647,
+    "mean_true": 31.699,
+    "mean_bias": 0.052,
+    "density": 1009.795,
+    "n_obs": 532
+  }
+}
