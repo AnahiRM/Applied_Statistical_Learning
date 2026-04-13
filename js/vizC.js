@@ -6,7 +6,7 @@ const ctx = {
     MAP_WIDTH:  620,
     MAP_HEIGHT: 540,
     GEOJSON_URL: "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson",
-    DATA_PATH: "data/region_metrics.json",
+    DATA_PATH: "../data/region_metrics.json",
     COLOR_LOW:  "#d4e8c2",   // low MAPE  → green
     COLOR_HIGH: "#7B2D2D",   // high MAPE → dark red
 };

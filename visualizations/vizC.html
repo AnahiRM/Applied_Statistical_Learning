@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Energy Prediction Reliability — French Regions</title>
-    <script src="d3_v7_min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -291,7 +290,7 @@
                 <canvas id="legendCanvas" height="8"></canvas>
                 <span class="legend-label" id="legendMax"></span>
             </div>
-            <p id="corseNote">† Corse excluded — insufficient weather station coverage.</p>
+            <p id="corseNote">† Corse excluded.</p>
         </div>
 
         <div id="infoPanel">
@@ -302,7 +301,7 @@
                 <div id="cardHeader">
                     <div id="cardRegion"></div>
                     <div id="cardMape"></div>
-                    <div class="card-mape-label">Mean Absolute % Error</div>
+                    <div class="card-mape-label">Mean Absolute Percentage Error (%)</div>
                 </div>
                 <div id="cardBody">
                     <div class="metric-row">
@@ -340,7 +339,8 @@
         Model: Random Forest with GridSearchCV (n_estimators=300, max_depth=50)
     </div>
 </div>
-<script src="viz.js"></script>
+<script src="../js/d3.v7.min.js"></script>
+<script src="../js/vizC.js"></script>
 <script>createViz();</script>
 </body>
 </html>
