@@ -118,7 +118,7 @@ function drawAxesB(innerG, innerW, innerH, minVal, maxVal) {
         .style("font-family", "Georgia, serif")
         .style("font-size", "12px")
         .style("fill", "#555")
-        .text("Actual consumption (kWh/capita)");
+        .text("Observed consumption (kWh/capita)");
 
     // Y axis label
     innerG.append("text")
@@ -204,7 +204,7 @@ function addTooltipB(innerG) {
             tooltip.style("opacity", 1)
                 .html(`
                     <strong>${d.region_name}</strong><br>
-                    Actual:    ${d.y_true.toFixed(2)} kWh/cap<br>
+                    Observed:    ${d.y_true.toFixed(2)} kWh/cap<br>
                     Predicted: ${d.y_pred_rf.toFixed(2)} kWh/cap<br>
                     Error:     ${d.abs_error_rf.toFixed(2)} kWh/cap<br>
                     MAPE:      ${(d.ape_rf * 100).toFixed(1)}%
@@ -335,6 +335,6 @@ function loadDataB() {
 /*--------------------------------------------------------------*/
 
 function createVizB() {
-    console.log("Viz B — Predicted vs Actual scatter");
+    console.log("Viz B — Predicted vs Observed scatter");
     loadDataB();
 }

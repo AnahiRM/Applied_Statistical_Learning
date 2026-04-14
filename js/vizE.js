@@ -233,22 +233,22 @@ function drawAnnotationsE(innerG, data, innerW, innerH) {
                 .style("fill", "#555")
                 .text("Provence — easiest");
 
-        } else {
+        } //else {
             // Small label for all other regions
-            const labelX = cx + (d.density > 150 ? -12 : 10);
-            const anchor = d.density > 150 ? "end" : "start";
+        //    const labelX = cx + (d.density > 150 ? -12 : 10);
+        //    const anchor = d.density > 150 ? "end" : "start";
 
-            innerG.append("text")
-                .attr("x", labelX)
-                .attr("y", cy + 4)
-                .attr("text-anchor", anchor)
-                .style("font-family", "Courier New, monospace")
-                .style("font-size", "8.5px")
-                .style("fill", "#888")
-                .text(d.region_name.length > 18
-                    ? d.region_name.split('-')[0].split(' ')[0]
-                    : d.region_name);
-        }
+        //    innerG.append("text")
+        //        .attr("x", labelX)
+        //        .attr("y", cy + 4)
+        //        .attr("text-anchor", anchor)
+        //        .style("font-family", "Courier New, monospace")
+        //        .style("font-size", "8.5px")
+        //        .style("fill", "#888")
+        //        .text(d.region_name.length > 18
+        //            ? d.region_name.split('-')[0].split(' ')[0]
+        //            : d.region_name);
+        //}
     });
 
     // "No clear trend" annotation

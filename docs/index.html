@@ -364,59 +364,104 @@
 
 <!-- S1 — CONTEXT -->
 <section id="s1">
-    <div class="eyebrow">Data Storytelling · CSC 51052 · 2026</div>
-    <h1>Predicting energy consumption in France — when the model is right on average but wrong where it matters</h1>
+    <div class="eyebrow">Data Storytelling · CSC_5CS17_AE · 2026</div>
+    <h1>Predicting energy consumption in France: when the model is right on average but wrong where it matters</h1>
     <p class="lead">
-        Grid operators must anticipate electricity demand in real time. Over-prediction wastes resources. Under-prediction risks blackouts. In a country as climatically and demographically diverse as France, a model that performs well <em>on average</em> may still fail systematically in specific places.
+        Grid operators must anticipate electricity demand in real time. Over-prediction wastes resources, meanwhile nder-prediction risks blackouts. In a country as climatically and demographically diverse as France, a model that performs well <em>on average</em> may still fail systematically in specific areas.
     </p>
     <p class="body-text">
-        We trained a Random Forest model on daily weather observations and regional demographic data to predict electricity consumption per capita across 12 metropolitan French regions from 2017 to 2021. This is the story of what we found.
+        We trained five different models on daily weather observations and population density data to predict electricity consumption per capita across 12 metropolitan French regions from 2017 to 2021. This is the <b>story</b> of what we found.
     </p>
 </section>
 
 <hr class="section-divider" />
 
 
-<!-- S2 — THE MODEL -->
 <section id="s2">
     <div class="eyebrow">Section 2 — The model</div>
-    <h2>The Random Forest predicts energy consumption well</h2>
+    <h2>Choosing the right architecture</h2>
     <p class="body-text">
-        After comparing five model families, the Random Forest achieved the best balance of accuracy and interpretability. Evaluated on a held-out test set of 6,348 observations across 12 regions, it achieves strong overall performance.
+        We trained our candidate models on a robust dataset of <strong>25,390 daily observations</strong> across 12 French regions. While the Neural Network achieved a marginally higher R<sup>2</sup>, the <strong>Random Forest</strong> was selected for its balance of predictive power and its ability to rank feature importance.
     </p>
 
+    <div class="viz-wrap" style="padding: 1.5rem; margin-bottom: 2rem;">
+        <table style="width: 100%; font-family: 'Courier New', monospace; font-size: 11px; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border); color: var(--faint);">
+                    <th style="text-align: left; padding: 10px 5px;">CANDIDATE MODEL</th>
+                    <th style="text-align: right; padding: 10px 5px;">MAE</th>
+                    <th style="text-align: right; padding: 10px 5px;">RMSE</th>
+                    <th style="text-align: right; padding: 10px 5px;">R²</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 0.5px solid #eee;">
+                    <td style="padding: 10px 5px;">Linear Regression</td>
+                    <td style="text-align: right;">4.088</td>
+                    <td style="text-align: right;">5.126</td>
+                    <td style="text-align: right;">0.712</td>
+                </tr>
+                <tr style="border-bottom: 0.5px solid #eee;">
+                    <td style="padding: 10px 5px;">Decision Tree</td>
+                    <td style="text-align: right;">2.209</td>
+                    <td style="text-align: right;">2.982</td>
+                    <td style="text-align: right;">0.902</td>
+                </tr>
+                <tr style="border-bottom: 0.5px solid #eee;">
+                    <td style="padding: 10px 5px;">SVR (RBF)</td>
+                    <td style="text-align: right;">2.280</td>
+                    <td style="text-align: right;">2.991</td>
+                    <td style="text-align: right;">0.902</td>
+                </tr>
+                <tr style="background: var(--warm); font-weight: bold; border-left: 3px solid var(--ink);">
+                    <td style="padding: 10px 5px;">Random Forest (Selected)</td>
+                    <td style="text-align: right;">1.706</td>
+                    <td style="text-align: right;">2.315</td>
+                    <td style="text-align: right;">0.941</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 5px;">Neural Network (MLP)</td>
+                    <td style="text-align: right;">1.735</td>
+                    <td style="text-align: right;">2.269</td>
+                    <td style="text-align: right;">0.944</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="viz-caption" style="margin-top: 10px;">Table 1 — Comparative performance. Models were trained on 25,390 samples and evaluated on a held-out test set of 6,348 observations.</p>
+    </div>
+
     <div class="stat-row">
+        <div class="stat-item">
+            <div class="stat-value">31,738</div>
+            <div class="stat-label">Total Observations</div>
+        </div>
         <div class="stat-item">
             <div class="stat-value">1.706</div>
             <div class="stat-label">MAE (kWh/capita)</div>
         </div>
-        <div class="stat-item">
-            <div class="stat-value">2.315</div>
-            <div class="stat-label">RMSE (kWh/capita)</div>
+        <div class="stat-item" style="border: 1px solid var(--border); background: #fff;">
+            <div class="stat-value">~1.7</div>
+            <div class="stat-label">Laundry Cycles*</div>
         </div>
         <div class="stat-item">
             <div class="stat-value">0.941</div>
-            <div class="stat-label">R²</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">4.3%</div>
-            <div class="stat-label">Mean MAPE</div>
+            <div class="stat-label">Selected R²</div>
         </div>
     </div>
 
+    <p class="body-text" style="font-size: 0.85rem; font-style: italic; margin-top: -10px;">
+        *Context: An error of 1.7 kWh per capita means the model's typical daily deviation per person is equivalent to the energy used by nearly <strong>two full laundry cycles</strong> (ADEME).
+    </p>
+
     <p class="body-text">
-        The scatter plot shows predicted vs actual consumption for every test observation, colored by region. Points along the dashed diagonal represent perfect predictions. Click a region in the legend to highlight it.
+        The scatter plot below shows the Random Forest's reliability. Most observations align closely with the diagonal, indicating that the model captures the close link between weather, city density, and electricity demand.
     </p>
 
     <div class="viz-wrap">
         <div id="vizB"></div>
-        <p class="viz-caption">Fig. 1 — Predicted vs actual consumption per capita (kWh). Each point = one region-day observation. Dashed line = perfect prediction. Colored by region.</p>
+        <p class="viz-caption">Fig. 1 — Predicted vs observed consumption per capita (kWh) for the Random Forest Model.</p>
     </div>
-
-    <p class="body-text">The model looks good. Most analyses would stop here.</p>
 </section>
-
-<hr class="section-divider" />
 
 
 <!-- S3 — THE TWIST -->
@@ -424,10 +469,10 @@
     <span class="twist-label">The twist</span>
     <h2>Average performance conceals critical spatial heterogeneity</h2>
     <p class="body-text">
-        When we decompose prediction errors by region, a very different picture emerges. A one-way ANOVA confirms that regional differences in prediction error are statistically significant — F=10.03, p&lt;0.001. These are not random fluctuations. The gap between the best and worst predicted region is 52%.
+        When we decompose prediction errors by region, a different picture emerges. A one-way ANOVA confirms that regional differences in prediction error are statistically significant — F=10.03, p&lt;0.001. These are not random fluctuations. The gap between the best and worst predicted region is <b>52%</b>.
     </p>
     <p class="body-text">
-        Applying a national-level model with uniform assumptions across regions obscures these critical variations — exactly the kind of aggregation bias that makes regional energy planning unreliable.
+        Applying a national-level model with uniform assumptions across regions obscures these critical variations — exactly the kind of aggregation bias that could make regional energy planning unreliable.
     </p>
     <div class="viz-wrap">
     <div id="vizANOVA"></div>
@@ -443,7 +488,7 @@
     <div class="eyebrow">Section 4 — Spatial analysis</div>
     <h2>Where does the model struggle?</h2>
     <p class="body-text">
-        The choropleth below encodes mean MAPE by region — darker red means harder to predict. Hover over any region to explore its prediction metrics, systematic bias direction, and ranking among all regions.
+        The choropleth map below encodes mean MAPE by region — darker red means harder to predict. Hover over any region to explore its prediction metrics, systematic bias direction, and ranking among all regions.
     </p>
 
     <div class="viz-wrap">
@@ -454,7 +499,7 @@
                     <canvas id="legendCanvas" height="8"></canvas>
                     <span class="legend-label" id="legendMax"></span>
                 </div>
-                <p id="corseNote">† Corse excluded — insufficient weather station coverage.</p>
+                <p id="corseNote">† Corse excluded.</p>
             </div>
             <div id="infoPanel">
                 <div id="infoDefault">
@@ -476,7 +521,7 @@
                             <span class="metric-value" id="cardPred"></span>
                         </div>
                         <div class="metric-row">
-                            <span class="metric-label">Avg actual</span>
+                            <span class="metric-label">Avg observed</span>
                             <span class="metric-value" id="cardTrue"></span>
                         </div>
                         <div class="metric-row">
@@ -508,33 +553,46 @@
 <hr class="section-divider" />
 
 
-<!-- S5 — EXPLANATION -->
 <section id="s5">
     <div class="eyebrow">Section 5 — Interpretation</div>
     <h2>Why are some regions harder to predict?</h2>
+    
     <p class="body-text">
-        The naive hypothesis — that denser, more urban regions should be easier to predict — is wrong. Île-de-France is the most dense region in France (1,009 people/km²) and has the highest prediction error. Urban economics offers the explanation.
+        One might assume that <strong>denser, more urban regions should be easier to predict</strong>. The logic is intuitive: high-density areas favor collective housing with shared walls, which are thermally more efficient than detached suburban homes. This should lead to lower, more stable per-capita heating demand.
     </p>
+
     <p class="body-text">
-        Dense urban areas like Paris are dominated by collective housing — apartment buildings with shared walls, which are thermally far more efficient than detached single-family homes. A weather-based model sees cold temperatures and predicts high heating demand. But Parisians in well-insulated apartment blocks need substantially less heating than the model expects. The model is blind to building typology, and this blindness is systematic.
+        <strong>The data proves this hypothesis wrong.</strong> Île-de-France is the most densely populated region in France (1,009 people/km²) yet it exhibits the highest prediction error. Urban morphology, rather than just climate, offers an alternative explanation. As explored by <strong>Lafourcade et al. (2021)</strong>, the relationship between urban compactness and environmental footprints is non-linear.
     </p>
-    <p class="body-text">
-        Beyond building form, several structural factors introduce inherent unpredictability: the <em>split-incentive problem</em> between landlords and tenants, older building stock near city centres, and the COVID-19 shift to telework which permanently redistributed demand from predictable commercial districts to dispersed residential suburbs.
-    </p>
-    <p class="body-text">
-        Regions with stable Mediterranean climates — Provence-Alpes-Côte d'Azur and Nouvelle-Aquitaine — benefit from consistent consumption patterns that a weather-based model learns well.
-    </p>
+
     <div class="viz-wrap">
-    <div id="vizE"></div>
-    <p class="viz-caption">Fig. 4 — Mean MAPE vs population density (log scale). Each point = one region. Color encodes MAPE magnitude. The naive hypothesis that denser regions are easier to predict is not supported — Île-de-France is the densest and the hardest to predict.</p>
-</div>
+        <div id="vizE"></div>
+        <p class="viz-caption">Fig. 4 — Mean MAPE vs population density (log scale). The "density-reliability" hypothesis is rejected: Île-de-France is both the densest and the least predictable region.</p>
+    </div>
+
+    <p class="body-text">
+        In dense urban centers like Paris, the model suffers from <strong>typological blindness</strong>. A weather-based model sees a drop in temperature and predicts a sharp rise in heating demand. However, residents in well-insulated, shared-wall apartment blocks require substantially less energy than the "average" French home. Because the model lacks data on building typology, it systematically overestimates demand in these zones.
+    </p>
+
+   <p class="body-text">
+        Beyond physical structures, urban centers introduce unique behavioral and economic noise. The <strong>"split-incentive" or landlord-tenant problem</strong>—where the party responsible for insulation upgrades does not pay the energy bills—creates vast discrepancies in building efficiency that weather data alone cannot capture <strong>(Petrov & Ryan, 2021)</strong>. 
+    </p>
+
+    <p class="body-text">
+        Additionally, the permanent shift toward <strong>hybrid work</strong> has decoupled consumption from traditional geographic patterns. As noted by <strong>Smite et al. (2023)</strong>, work-from-home policies have redistributed energy load from predictable commercial hubs to dispersed residential circuits, introducing a level of randomness that current regional models struggle to resolve.
+    </p>
+
+    <p class="body-text">
+        In contrast, regions with stable Mediterranean climates, such as Provence-Alpes-Côte d'Azur, could be benefiting from more consistent cooling and heating patterns that a weather-driven Random Forest can learn with high precision.
+    </p>
 
     <blockquote>
-        "Prediction reliability is not simply a function of climate variability. It reflects the urban form, building stock, and behavioral patterns that determine how regions translate weather into energy demand."
+        "Predictive reliability is not merely a function of climate and population density. It is a reflection of urban form and human behavior—the complex (non-linear) filters through which weather is translated into energy demand."
     </blockquote>
 </section>
 
 <hr class="section-divider" />
+
 
 
 <!-- S6 — CONCLUSION -->
@@ -542,24 +600,69 @@
     <div class="eyebrow">Section 6 — Conclusion</div>
     <h2>Understanding where models fail is as important as their average performance</h2>
     <p class="body-text">
-        Our Random Forest achieves strong average performance (R²=0.941), but its reliability varies significantly across French regions — and those variations are statistically significant and spatially structured. Better regional forecasting requires not just better weather data, but data on building typology, housing tenure, and urban morphology.
+        Our Random Forest achieves strong average performance (R²=0.941), but its reliability varies significantly across French regions, and those variations are statistically significant and spatially structured. Better regional forecasting requires not just better weather data, but a more comprehensive dataset that includes data on building typology, housing tenure, and urban morphology.
     </p>
     <p class="body-text">
-        This analysis shifts the focus from <em>predictive accuracy</em> to <em>predictive reliability across space</em> — a distinction that matters for grid operators, urban planners, and anyone making decisions based on regional energy forecasts.
+        This analysis shifts the focus from <em>predictive accuracy</em> to <em>predictive reliability across space</em>: a distinction that matters for grid operators, urban planners, and anyone making decisions based on regional energy forecasts.
     </p>
-
-    <blockquote>
-        "While our model predicts energy consumption well on average, its performance varies significantly across regions — revealing that the relationship between weather and energy consumption is mediated by urban structure in ways that aggregate models cannot capture."
-    </blockquote>
 </section>
 
 
+<hr class="section-divider" />
+
+<section id="s7">
+    <div class="eyebrow">Data Sources & References</div>
+    
+    <div class="body-text" style="font-size: 0.82rem; line-height: 1.6;">
+        <p style="margin-bottom: 1.2rem;">
+            <strong>Data Sources:</strong><br>
+            • <strong>Energy Consumption:</strong> RTE / data.gouv.fr, 
+            <a href="https://www.data.gouv.fr/datasets/consommation-quotidienne-brute-regionale" target="_blank" style="color: var(--faint); text-decoration: underline;">
+                <em>"Consommation quotidienne brute régionale"</em>
+            </a>. Official daily gross electricity consumption by region (2017-2021).<br>
+            • <strong>Climate Data:</strong> Météo-France, 
+                <a href="https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes" target="_blank" style="color: var(--faint); text-decoration: underline;">
+                    <em>"Données climatologiques de base quotidiennes"</em>
+                </a>. Daily observations of temperature, precipitation, and radiation via data.gouv.fr.<br>
+            • <strong>Demographics:</strong> INSEE / data.gouv.fr, 
+            <a href="https://www.data.gouv.fr/datasets/population-municipale-des-regions-france-entiere" target="_blank" style="color: var(--faint); text-decoration: underline;">
+                <em>"Population municipale des régions (France entière)"</em>
+            </a>. Official census data used for per-capita normalization and density calculations.
+        </p>
+
+        <p style="margin-bottom: 1.2rem;">
+            <strong>Energy Equivalency:</strong><br>
+            The "Laundry Cycle" unit (1 kWh) is a standard baseline for household energy impact. Source: 
+            <strong>ADEME</strong> (French Agency for Ecological Transition), 
+            <a href="https://agirpourlatransition.ademe.fr/particuliers/economiser/energie/consommation-appareils-menagers" target="_blank" style="color: var(--faint); text-decoration: underline;">
+                <em>"Consommation des appareils ménagers"</em>
+            </a>, 2024.
+        </p>
+
+        <p style="margin-bottom: 1.2rem;">
+            <strong>Academic References:</strong><br>
+            • Lafourcade, M., Carantino, B., & de Thé, C. B. (2021). 
+            <em>"The carbon ‘carprint’ of urbanization: New evidence from French cities."</em> 
+            <strong>Regional Science and Urban Economics</strong>, Vol. 89. 
+            <a href="https://doi.org/10.1016/j.regsciurbeco.2021.103693" target="_blank" style="color: var(--faint);">doi:10.1016/j.regsciurbeco.2021.103693</a><br> 
+            • Smite, D., Moe, N. B., Hildrum, J., Gonzalez-Huerta, J., & Méndez, D. (2023). 
+            <em>"Work-from-home is here to stay: Call for flexibility in post-pandemic work policies."</em> 
+            <strong>Journal of Systems and Software</strong>, Vol. 195. 
+            <a href="https://doi.org/10.1016/j.jss.2022.111552" target="_blank" style="color: var(--faint);">
+            doi:10.1016/j.jss.2022.111552</a><br>
+            • Petrov, I., & Ryan, L. (2021). 
+            <em>"The landlord-tenant problem and energy efficiency in the residential rental market."</em> 
+            <strong>Energy Policy</strong>, Vol. 157. 
+            <a href="https://doi.org/10.1016/j.enpol.2021.112458" target="_blank" style="color: var(--faint);">
+            doi:10.1016/j.enpol.2021.112458</a><br>
+        </p>
+    </div>
+</section>
+
 <footer>
-    Data: Météo-France (weather) · RTE (electricity consumption) · INSEE (population &amp; density)<br>
-    Model: Random Forest with GridSearchCV — n_estimators=300, max_depth=50, R²=0.941, MAE=1.706 kWh/capita<br>
-    Geographic boundaries: gregoiredavid/france-geojson (IGN Admin Express, ODbL licence)<br>
-    Course: CSC 51052 — Data Visualization · École Polytechnique · 2026
+    Course: Data Storytelling CSC_5CS17_AE · École Polytechnique - ENSAE · 2026
 </footer>
+
 
 <script src="../js/d3.v7.min.js"></script>
 <script src="../js/vizB.js"></script>
