@@ -131,6 +131,21 @@ Random Forest offers the best trade-off between performance and interpretability
 
 ---
 
+## Data Storytelling                                                                                                                
+                                                                                                                                   
+An interactive data storytelling page is available at ([docs/index.html](https://anahirm.github.io/Energy_Weather_France/docs/index.html)).                                         
+                                                                                                                                  
+**Title:** *Predicting energy consumption in France: when the model is right on average but wrong where it matters*                 
+                                                                                                                                   
+It is built with D3.js and structured around the following narrative sections:                                                      
+                                                                                                                                   
+1. **The model** — Choosing the right architecture (model comparison)                                                               
+2. **Spatial heterogeneity** — Average performance conceals critical regional differences                                           
+3. **Spatial analysis** — Where does the model struggle?                                                                            
+4. **Interpretation** — Why are some regions harder to predict?                                                                     
+5. **Conclusion** — Understanding where models fail is as important as their average performance                                    
+6. **Data Sources & References**                                                                                                    
+                                                                                                                                     
 ## How to Run
 
 ### Clone repository
