@@ -169,5 +169,5 @@ It is built with D3.js and structured around the following narrative sections:
 
 ### Clone repository
 ```bash
-git clone <repo_link>
+git clone <https://github.com/AnahiRM/Energy_Weather_France>
 cd Energy_Weather_France
