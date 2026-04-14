@@ -69,7 +69,7 @@ Energy_Weather_France/
 │   ├── POPULATION_MUNICIPALE_REGION_FRANCE.xlsx
 │   └── energy_source_with_predictions.csv
 │
-├── scripts/
+├── notebooks
 │   ├── 01_data_cleaning.ipynb
 │   ├── 02_modeling.ipynb
 │   └── 03_visualizations.ipynb
@@ -83,17 +83,17 @@ Energy_Weather_France/
 
 ### Notebooks
 
-**scripts/01_data_cleaning.ipynb**
+**notebooks/01_data_cleaning.ipynb**
 - Merge datasets  
 - Feature engineering  
 - Cleaning and preprocessing  
 
-**scripts/02_modeling.ipynb**
+**notebooks/02_modeling.ipynb**
 - Model training  
 - Hyperparameter tuning  
 - Evaluation and visualization  
 
-**scripts/03_visualizations.ipynb**
+**notebooks/03_visualizations.ipynb**
 - Generate plots and figures  
 - Model comparison visuals  
 - Data storytelling outputs  
