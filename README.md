@@ -64,12 +64,18 @@ Cleaning steps:
 ```
 Energy_Weather_France/
 │
-│── data/
-│  ├── france_energy_meteo_daily.csv
-│  ├── POPULATION_MUNICIPALE_REGION_FRANCE.xlsx
+├── data/
+│   ├── france_energy_meteo_daily.csv
+│   ├── POPULATION_MUNICIPALE_REGION_FRANCE.xlsx
+│   └── energy_source_with_predictions.csv
 │
-├── 01_data_cleaning.ipynb
-├── 02_modeling.ipynb
+├── scripts/
+│   ├── 01_data_cleaning.ipynb
+│   ├── 02_modeling.ipynb
+│   └── 03_visualizations.ipynb
+│
+├── docs/
+│   └── index.html
 │
 ├── output/
 └── README.md
@@ -116,18 +122,26 @@ We use a supervised regression framework to predict daily electricity consumptio
 
 ## Results
 
-| Model | RMSE | MAE | R² |
-|------|------|-----|----|
-| Linear Regression | 4.38 | 5.50 | 0.68 |
-| Decision Tree | 3.06 | 3.88 | 0.84 |
-| Random Forest | **2.62** | **3.30** | **0.88** |
-| SVM (RBF) | 3.04 | 3.90 | 0.84 |
-| MLP Neural Network | 2.66 | 3.32 | 0.88 |
+### Model Performance
 
-Random Forest and MLP provide the best predictive performance, improving RMSE by ~40% over the linear baseline.  
-This confirms a strong **non-linear relationship between weather variables and electricity demand**.
+| Model                | MAE  | RMSE | R²    |
+|---------------------|------|------|-------|
+| Linear Regression   | 4.088 | 5.126 | 0.712 |
+| Decision Tree       | 2.209 | 2.982 | 0.902 |
+| SVR (RBF)           | 2.280 | 2.991 | 0.902 |
+| Random Forest       | **1.706** | 2.315 | 0.941 |
+| Neural Network (MLP)| 1.735 | **2.269** | **0.944** |
 
-Random Forest offers the best trade-off between performance and interpretability.
+### Key Insights
+
+- All non-linear models substantially outperform the linear baseline, confirming a strong **non-linear relationship between weather variables and electricity demand**.
+- The **Random Forest** achieves the lowest MAE, making it the most accurate in absolute prediction error.
+- The **MLP Neural Network** achieves the best overall fit (highest R² and lowest RMSE), slightly outperforming Random Forest.
+- Tree-based and kernel-based models (Decision Tree, SVR) already capture most of the predictive structure, suggesting that non-linearity is a dominant feature of the data.
+
+### Interpretation
+
+While the MLP provides the best predictive performance, the Random Forest remains a strong candidate due to its balance between **accuracy and interpretability**, making it more suitable for policy-oriented applications.
 
 ---
 
