@@ -83,15 +83,20 @@ Energy_Weather_France/
 
 ### Notebooks
 
-**Data Cleaning.ipynb**
+**scripts/01_data_cleaning.ipynb**
 - Merge datasets  
 - Feature engineering  
 - Cleaning and preprocessing  
 
-**ML Analysis.ipynb**
+**scripts/02_modeling.ipynb**
 - Model training  
 - Hyperparameter tuning  
 - Evaluation and visualization  
+
+**scripts/03_visualizations.ipynb**
+- Generate plots and figures  
+- Model comparison visuals  
+- Data storytelling outputs  
 
 ---
 
