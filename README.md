@@ -1,6 +1,4 @@
 # Energy Consumption under Changing Weather
-### French Regional Energy Demand — ML Analysis & Data Storytelling
-
 ---
 
 ## About this Repository
