@@ -1,173 +1,105 @@
-# 🌍 Energy Consumption under Changing Weather  
-### A Machine Learning Case Study of French Energy Demand  
-
-**Authors:** Anahí Reyes Miguel and Robert Campbell Powers
-
-This project builds machine learning models to predict **daily regional electricity consumption per capita in France** using weather, demographic, and calendar data.  
-It evaluates multiple models to understand the **non-linear relationship between weather patterns and energy demand** and to support energy planning in a renewable-transition context.
+# Energy Consumption under Changing Weather
+### French Regional Energy Demand — ML Analysis & Data Storytelling
 
 ---
 
-## Overview
+## About this Repository
 
-Accurate electricity demand forecasting is essential for modern power grid management.  
-With renewable energy production highly dependent on weather conditions, understanding how weather affects consumption is critical for grid stability, planning, and policy.
+This repository contains two related but independent projects:
 
-This project uses statistical learning methods to estimate regional electricity demand in France based on observed weather conditions.
+**Part 1 — Machine Learning Analysis**
+*Applied Statistical Learning · APM_5ML10_AE · École Polytechnique – ENSAE*
+Built with **Anahí Reyes Miguel and Robert Campbell Powers**.
+Trains and evaluates regression models to predict daily electricity consumption per capita across 12 French regions using weather, demographic, and calendar data.
 
-Main objective:  
-Predict **daily electricity consumption per capita** at the regional level using weather and demographic data.
+**Part 2 — Interactive Data Storytelling**
+*Data Storytelling · CSC_5CS17_AE · École Polytechnique – ENSAE · 2026*
+Built by **Anahí Reyes Miguel**, reusing the ML findings to investigate a key question: is predictive accuracy uniform across geographic space?
 
----
-
-## Dataset
-
-The final dataset combines three sources:
-
-### Electricity consumption  
-**Source:** Opendata Réseaux-Énergies (ODRÉ)  
-- Half-hourly regional consumption  
-- Aggregated to daily totals  
-- Metropolitan France (excluding Corsica)  
-- Period used: 2014–2021  
-
-### Weather data  
-**Source:** Météo-France  
-- 3,900+ weather stations  
-- 200+ meteorological variables  
-- Aggregated to daily regional averages  
-
-### Population statistics  
-**Source:** INSEE  
-- Regional population (2014–2024)  
-- Used to compute per-capita consumption  
-- Population density constructed as additional feature  
+**Live page → [https://anahirm.github.io/Energy_Weather_France/docs/index.html](https://anahirm.github.io/Energy_Weather_France/docs/index.html)**
 
 ---
 
-## Final modeling dataset
+## How to Run Locally
 
-- Unit: region × day  
-- Rows: ~57,000  
-- Features after cleaning: 29  
-- Target: electricity consumption per capita  
+See [`js/README.md`](js/README.md) for full instructions. The quickest way — from the project root:
 
-Cleaning steps:
-- Removed variables with >20% missing values  
-- Removed multicollinearity using VIF threshold  
-- Aggregated weather stations to regional averages  
-- Constructed per-capita consumption  
+```bash
+python -m http.server 8000
+```
+
+Then open: `http://localhost:8000/docs/index.html`
+
+> Opening `index.html` directly by double-clicking will not work due to browser CORS restrictions on local JSON files.
 
 ---
 
 ## Repository Structure
+
 ```
 Energy_Weather_France/
-│
+├── docs/
+│   └── index.html              
+├── js/
+│   ├── vizB.js                 
+│   ├── vizC.js                
+│   ├── vizD.js                 
+│   ├── vizE.js                 
+│   ├── vizANOVA.js             
+│   └── d3.v7.min.js
 ├── data/
 │   ├── france_energy_meteo_daily.csv
-│   ├── POPULATION_MUNICIPALE_REGION_FRANCE.xlsx
-│   └── energy_source_with_predictions.csv
-│
-├── notebooks
+│   ├── energy_source_with_predictions.csv
+│   ├── rf_results.csv
+│   ├── region_metrics.json
+│   ├── rf_scatter.json
+│   ├── anova_results.json
+│   ├── violin_data.json
+│   └── viz_e_data.json
+├── notebooks/
 │   ├── 01_data_cleaning.ipynb
 │   ├── 02_modeling.ipynb
-│   └── 03_visualizations.ipynb
-│
-├── docs/
-│   └── index.html
-│
+│   └── 03_visualizations.ipynb 
 ├── output/
 └── README.md
 ```
 
-### Notebooks
+---
 
-**notebooks/01_data_cleaning.ipynb**
-- Merge datasets  
-- Feature engineering  
-- Cleaning and preprocessing  
+## Part 1 — ML Analysis
 
-**notebooks/02_modeling.ipynb**
-- Model training  
-- Hyperparameter tuning  
-- Evaluation and visualization  
+### Dataset
 
-**notebooks/03_visualizations.ipynb**
-- Generate plots and figures  
-- Model comparison visuals  
-- Data storytelling outputs  
+Three publicly available sources combined into a daily region-level panel (2017–2021):
+
+- **Energy:** RTE / data.gouv.fr — *Consommation quotidienne brute régionale*
+- **Climate:** Météo-France — 3,900+ weather stations, aggregated to daily regional averages
+- **Demographics:** INSEE — regional population used for per-capita normalization
+
+Final dataset: **31,738 observations** (region × day), 12 metropolitan regions, 29 features after cleaning.
+
+### Model Results
+
+| Model | MAE | RMSE | R² |
+|:------|----:|-----:|---:|
+| Linear Regression | 4.088 | 5.126 | 0.712 |
+| Decision Tree | 2.209 | 2.982 | 0.902 |
+| SVR (RBF) | 2.280 | 2.991 | 0.902 |
+| **Random Forest** (selected) | **1.706** | **2.315** | **0.941** |
+| Neural Network (MLP) | 1.735 | 2.269 | 0.944 |
+
+The Random Forest was selected for its best balance of accuracy and interpretability.
 
 ---
 
-## Methodology
+## Part 2 — Data Storytelling
 
-We use a supervised regression framework to predict daily electricity consumption per capita.
+*Predicting energy consumption in France: when the model is right on average but wrong where it matters*
 
-### Models implemented
-- Linear Regression (baseline)
-- Decision Tree
-- Random Forest
-- Support Vector Regressor (RBF kernel)
-- Multilayer Perceptron (MLP neural network)
+The story follows a martini-glass narrative structure — author-driven first, then reader-driven exploration:
 
-### Pipeline
-
-1. Merge weather, energy, and population data  
-2. Create per-capita consumption target  
-3. Train/test split (80/20 random split)  
-4. Feature scaling for SVM and MLP  
-5. Hyperparameter tuning using GridSearchCV  
-6. Evaluation using:
-   - MAE  
-   - RMSE  
-   - R²  
-
----
-
-## Results
-
-### Model Performance
-
-| Model                | MAE  | RMSE | R²    |
-|---------------------|------|------|-------|
-| Linear Regression   | 4.088 | 5.126 | 0.712 |
-| Decision Tree       | 2.209 | 2.982 | 0.902 |
-| SVR (RBF)           | 2.280 | 2.991 | 0.902 |
-| Random Forest       | **1.706** | 2.315 | 0.941 |
-| Neural Network (MLP)| 1.735 | **2.269** | **0.944** |
-
-### Key Insights
-
-- All non-linear models substantially outperform the linear baseline, confirming a strong **non-linear relationship between weather variables and electricity demand**.
-- The **Random Forest** achieves the lowest MAE, making it the most accurate in absolute prediction error.
-- The **MLP Neural Network** achieves the best overall fit (highest R² and lowest RMSE), slightly outperforming Random Forest.
-- Tree-based and kernel-based models (Decision Tree, SVR) already capture most of the predictive structure, suggesting that non-linearity is a dominant feature of the data.
-
-### Interpretation
-
-While the MLP provides the best predictive performance, the Random Forest remains a strong candidate due to its balance between **accuracy and interpretability**, making it more suitable for policy-oriented applications.
-
----
-
-## Data Storytelling                                                                                                                
-                                                                                                                                   
-An interactive data storytelling page is available at ([docs/index.html](https://anahirm.github.io/Energy_Weather_France/docs/index.html)).                                         
-                                                                                                                                  
-**Title:** *Predicting energy consumption in France: when the model is right on average but wrong where it matters*                 
-                                                                                                                                   
-It is built with D3.js and structured around the following narrative sections:                                                      
-                                                                                                                                   
-1. **The model** — Choosing the right architecture (model comparison)                                                               
-2. **Spatial heterogeneity** — Average performance conceals critical regional differences                                           
-3. **Spatial analysis** — Where does the model struggle?                                                                            
-4. **Interpretation** — Why are some regions harder to predict?                                                                     
-5. **Conclusion** — Understanding where models fail is as important as their average performance                                    
-6. **Data Sources & References**                                                                                                    
-                                                                                                                                     
-## How to Run
-
-### Clone repository
-```bash
-git clone https://github.com/AnahiRM/Energy_Weather_France
-cd Energy_Weather_France
+1. **The model** — five-model benchmark, Random Forest selected
+2. **The twist** — ANOVA confirms prediction errors are spatially structured (F = 10.03, p < 0.001)
+3. **The map** — choropleth of mean MAPE by region, interactive hover
+4. **The explanation** — typological blindness, landlord-tenant problem, hybrid work
+5. **Conclusion** — predictive reliability across space matters as much as average accuracy
