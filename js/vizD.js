@@ -42,14 +42,10 @@ function initScalesD(data) {
         .range([0, innerW])
         .padding(0.2);
 
-    const absMax = Math.max(
-        Math.abs(d3.min(data, d => d.error_rf)),
-        Math.abs(d3.max(data, d => d.error_rf))
-    );
-
+    // Replace with:
     yScaleD = d3.scaleLinear()
-        .domain([-absMax * 1.1, absMax * 1.1])
-        .range([innerH, 0]);
+    .domain([0, d3.max(data, d => d.ape_rf) * 1.05])
+    .range([innerH, 0]);
 
     const meanByRegion = d3.rollup(data, v => d3.mean(v, d => d.ape_rf), d => d.region_name);
     
@@ -65,20 +61,12 @@ function initScalesD(data) {
 /*--------------------------------------------------------------*/
 
 function drawAxesD(innerG, innerW, innerH) {
-    // Zero line
-    innerG.append("line")
-        .attr("x1", 0).attr("x2", innerW)
-        .attr("y1", yScaleD(0)).attr("y2", yScaleD(0))
-        .style("stroke", "#1a1a1a")
-        .style("stroke-width", 1)
-        .style("stroke-dasharray", "4,3");
-
     // Y Axis
     innerG.append("g")
-        .call(d3.axisLeft(yScaleD).ticks(8))
-        .selectAll("text")
-        .style("font-family", "Courier New, monospace")
-        .style("font-size", "10px");
+        .call(d3.axisLeft(yScaleD)
+        .ticks(6)
+        .tickFormat(d => (d * 100).toFixed(0) + "%")  // ← add this
+    )
 
     // X Axis Labels
     innerG.append("g")
@@ -102,7 +90,7 @@ function drawDotplots(innerG, data, meanByRegion) {
 
     ctxD.REGION_ORDER.forEach(region => {
         const regionData = data.filter(d => d.region_name === region);
-        const errors = regionData.map(d => d.error_rf).sort(d3.ascending);
+        const errors = regionData.map(d => d.ape_rf).sort(d3.ascending);
         const cx = xScaleD(region) + xScaleD.bandwidth() / 2;
         
         const fillColor = colorScaleD(d3.mean(regionData, d => d.ape_rf));
@@ -119,7 +107,7 @@ function drawDotplots(innerG, data, meanByRegion) {
             .attr("class", "raw-point")
             .attr("r", 1.5) 
             .attr("cx", () => cx + (Math.random() - 0.5) * jitterWidth)
-            .attr("cy", d => yScaleD(d.error_rf))
+            .attr("cy", d => yScaleD(d.ape_rf))
             .attr("fill", fillColor)
             .attr("opacity", 0.3); 
 
@@ -152,7 +140,7 @@ function drawDotplots(innerG, data, meanByRegion) {
             .attr("x1", cx - jitterWidth / 2)
             .attr("x2", cx + jitterWidth / 2)
             .attr("y1", yScaleD(median)).attr("y2", yScaleD(median))
-            .attr("stroke", "red")
+            .attr("stroke", "#1a1a1a")
             .attr("stroke-width", 2);
     });
 }
@@ -177,7 +165,7 @@ function addTooltipD(innerG, data) {
 
     ctxD.REGION_ORDER.forEach(region => {
         const regionData = data.filter(d => d.region_name === region);
-        const errors = regionData.map(d => d.error_rf).sort(d3.ascending);
+        const errors = regionData.map(d => d.ape_rf).sort(d3.ascending);
         const meanMape = d3.mean(regionData, d => d.ape_rf);
 
         innerG.append("rect")

@@ -131,7 +131,10 @@ function updateInfoPanel(name) {
     // Bias with direction colour
     const biasEl   = document.getElementById("cardBias");
     const biasSign = d.mean_bias >= 0 ? "+" : "";
-    biasEl.textContent = biasSign + d.mean_bias.toFixed(3) + " kWh/cap";
+    const direction = d.mean_bias > 0.05  ? "↑ underestimate" :
+                  d.mean_bias < -0.05 ? "↓ overestimate"  :
+                                         "≈ ";
+    biasEl.textContent = biasSign + d.mean_bias.toFixed(3) + " kWh/cap  " + direction;
     biasEl.className   = "metric-value " +
         (d.mean_bias >  0.05 ? "bias-pos" :
          d.mean_bias < -0.05 ? "bias-neg" : "");
